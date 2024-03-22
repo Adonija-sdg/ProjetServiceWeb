@@ -6,6 +6,7 @@ import com.example.isge.ProjetServiceWeb.entity.Utilisateur;
 import com.example.isge.ProjetServiceWeb.service.UtilisateurService;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,6 +51,7 @@ public class ControllerUtilisateur {
     }
 
     @GetMapping("/getAll")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @ResponseBody
     public List<UtilisateurDto> obtenirTousLesUtilisateurs() {
         return utilisateurService.obtenirTousLesUtilisateurs();

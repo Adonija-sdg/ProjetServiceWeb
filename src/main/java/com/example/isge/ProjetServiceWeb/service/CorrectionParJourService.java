@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -33,13 +34,24 @@ public class CorrectionParJourService {
         Optional<CorrectionParJour> optionalCorrectionParJour = correctionParJourRepository.findById(idCorrection);
         if (optionalCorrectionParJour.isPresent()) {
             CorrectionParJour correctionParJour = optionalCorrectionParJour.get();
-            // Mettre à jour les informations de la correction avec les données du DTO
+            LocalDate dateCourante = LocalDate.now();
+
+            if (!correctionParJour.getDateSaisie().isEqual(dateCourante)) {
+                // Si la date de la correction dans la base de données n'est pas la même que la date actuelle
+                correctionParJour.setDateSaisie(dateCourante); // Mettre à jour la date de saisie avec la date actuelle
+                correctionParJourRepository.save(correctionParJour); // Enregistrer la correction mise à jour dans la base de données
+                // Mettre à jour d'autres attributs si nécessaire
+            }
+            else {
+                // Gérer le cas où la correction a déjà été effectuée pour la journée actuelle
+                // Vous pouvez lever une exception ou gérer autrement selon votre logique métier
+            }
+
             correctionParJour.setDateSaisie(correctionParJourDto.getDateSaisie());
             // Mettre à jour d'autres attributs si nécessaire
             correctionParJourRepository.save(correctionParJour);
         } else {
-            // Gérer le cas où la correction n'est pas trouvée
-            // Vous pouvez lever une exception ou gérer autrement selon votre logique métier
+
         }
     }
 
